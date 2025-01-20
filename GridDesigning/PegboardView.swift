@@ -12,12 +12,16 @@ struct PegboardView: View {
     let rows: [Int]
 
     @Binding var currentColor: Color
-    @State var buttonColors: [Int: [Int: Color]] = [:] // [Column: [Row: COLOR]]
+    // [Column: [Row: COLOR]]
+    @Binding var buttonColors: [Int: [Int: Color]]
+    @Binding var colorPallette: [Color]
 
-    init(columns: Int, rows: Int, currentColor: Binding<Color>) {
+    init(columns: Int, rows: Int, currentColor: Binding<Color>, buttonColors: Binding<[Int: [Int: Color]]>, colorPallette: Binding<[Color]>) {
         self.columns = Array<Int>(0..<columns)
         self.rows = Array<Int>(0..<rows)
         self._currentColor = currentColor
+        self._buttonColors = buttonColors
+        self._colorPallette = colorPallette
     }
  
     var body: some View {
@@ -34,6 +38,7 @@ struct PegboardView: View {
                 }
             }
         }
+        .padding(.bottom)
         .scrollIndicators(.visible)
         .foregroundStyle(Color.white)
     }
@@ -66,13 +71,16 @@ struct PegboardView: View {
             newColor = nil
         } else {
             newColor = currentColor
+            if !colorPallette.contains(currentColor) {
+                colorPallette.insert(currentColor, at: 0)
+            }
         }
         buttonColors[column, default: [:]][row] = newColor
     }
 
 }
 
-private extension PegboardView {
+extension PegboardView {
     static let buttonSize: CGFloat = 40
     static let barWidth: CGFloat = 8
     static let alphabet = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,AA,BB,CC,DD,EE,FF,GG,HH,II,JJ,KK,LL,MM,NN,OO,PP,QQ,RR,SS,TT,UU,VV,WW,XX,YY,ZZ,AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH,III,JJJ,KKK,LLL,MMM,NNN,OOO,PPP,QQQ,RRR,SSS,TTT,UUU,VVV,WWW,XXX,YYY,ZZZ".split(separator: ",").map { String($0) }
