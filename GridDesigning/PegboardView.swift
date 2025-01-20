@@ -11,43 +11,43 @@ struct PegboardView: View {
     let columns: [Int]
     let rows: [Int]
 
-    @State var currentColor: Color = .blue
+    @Binding var currentColor: Color
     @State var buttonColors: [Int: [Int: Color]] = [:] // [Column: [Row: COLOR]]
 
-    init(columns: Int, rows: Int) {
+    init(columns: Int, rows: Int, currentColor: Binding<Color>) {
         self.columns = Array<Int>(0..<columns)
         self.rows = Array<Int>(0..<rows)
+        self._currentColor = currentColor
     }
  
     var body: some View {
-        AllScrollView {
-            Grid(horizontalSpacing: Self.barWidth, verticalSpacing: Self.barWidth) {
-                topRow
-                ForEach(rows, id: \.self) { row in
-                    GridRow {
-                        Text(Self.alphabet[row])
-                        ForEach(columns, id: \.self) { column in
-                            VStack(spacing: Self.barWidth) {
-                                coloredButton(column: column, row: row)
-                            }
+        Grid(horizontalSpacing: Self.barWidth, verticalSpacing: Self.barWidth) {
+            topRow
+            ForEach(rows, id: \.self) { row in
+                GridRow {
+                    Text(Self.alphabet[row])
+                    ForEach(columns, id: \.self) { column in
+                        VStack(spacing: Self.barWidth) {
+                            coloredButton(column: column, row: row)
                         }
                     }
                 }
             }
-            .scrollIndicators(.visible)
-            .foregroundStyle(Color.white)
         }
-        .background(Color.black)
+        .scrollIndicators(.visible)
+        .foregroundStyle(Color.white)
     }
     
     @ViewBuilder
     func coloredButton(column: Int, row: Int) -> some View {
-        Button() {
-            setColor(column: column, row: row)
-        } label: {
-            buttonColors[column]?[row] ?? .white
-        }
-        .frame(width: Self.buttonSize, height: Self.buttonSize)
+        (buttonColors[column]?[row] ?? .white)
+            .frame(width: Self.buttonSize, height: Self.buttonSize)
+            .onTapGesture {
+                setColor(column: column, row: row)
+            }
+            .onLongPressGesture {
+                currentColor = buttonColors[column]?[row] ?? .white
+            }
     }
     
     @ViewBuilder
@@ -79,5 +79,5 @@ private extension PegboardView {
 }
 
 #Preview {
-    PegboardView(columns: 16, rows: 16)
+    PegboardDrawingView(columns: 16, rows: 16)
 }

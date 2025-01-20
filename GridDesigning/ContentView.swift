@@ -13,7 +13,7 @@ struct ContentView: View {
     @Query private var items: [Item]
     
     var body: some View {
-        PegboardView(columns: 16, rows: 16)
+        PegboardDrawingView(columns: 16, rows: 16)
     }
 }
 
