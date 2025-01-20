@@ -9,24 +9,45 @@ import SwiftUI
 
 struct PegboardDrawingView: View {
     @State var currentColor: Color = .black
+    @State var sharableSnapshot: UIImage?
     let columns: Int
     let rows: Int
     
-    @State var buttonColors: [Int: [Int: Color]] = [:] // [Column: [Row: COLOR]]
+    // [Column: [Row: COLOR]]
+    @State var buttonColors: [Int: [Int: Color]] = [:]
     @State var colorPallette: [Color] = []
 
     var body: some View {
         VStack {
             AllScrollView {
-                PegboardView(columns: columns, rows: rows, currentColor: $currentColor, buttonColors: $buttonColors, colorPallette: $colorPallette)
+                pegboard
             }
             ScrollView(.horizontal) {
                 horizontalColorPicker
             }
         }
         .background(Color.black)
+        .toolbar {
+            if let sharableSnapshot {
+                ToolbarItem(placement: .topBarLeading) {
+                    ShareLink(item: sharableSnapshot, preview: SharePreview("Pegboard", image: sharableSnapshot))
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    sharableSnapshot = ImageRenderer(content: pegboard).uiImage
+                } label: {
+                    Image(systemName: "camera")
+                }
+            }
+            
+        }
     }
     
+    @ViewBuilder
+    var pegboard: PegboardView {
+        PegboardView(columns: columns, rows: rows, currentColor: $currentColor, buttonColors: $buttonColors, colorPallette: $colorPallette)
+    }
     
     @ViewBuilder
     var horizontalColorPicker: some View {
@@ -75,7 +96,7 @@ struct PegboardDrawingView: View {
 }
 
 #Preview {
-    PegboardDrawingView(columns: 16, rows: 16)
+    ContentView()
 }
 
 //struct HorizontalColorPallet: View {
@@ -118,3 +139,18 @@ struct PegboardDrawingView: View {
 //}
 //
 //
+
+extension UIImage: @retroactive Transferable {
+    public static var transferRepresentation: some TransferRepresentation {
+        ProxyRepresentation(exporting: { Image(uiImage: $0) })
+    }
+}
+//struct Photo: Transferable {
+//    static var transferRepresentation: some TransferRepresentation {
+//        ProxyRepresentation(exporting: \.image)
+//    }
+//
+//
+//    public var image: Image
+//    public var caption: String
+//}
