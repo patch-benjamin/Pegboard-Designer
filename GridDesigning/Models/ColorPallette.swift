@@ -8,8 +8,45 @@
 import SwiftData
 import SwiftUI
 
+@dynamicMemberLookup
+struct ColorPallette {
+    static var current: Self = .init()
+    static var context: ModelContext { GridDesigningApp.context }
+
+    private var _pallette: _UserColorPallette
+
+    private init() {
+        let context = Self.context
+        let allPallettes = try? context.fetch(FetchDescriptor<_UserColorPallette>())
+        let firstPallette = allPallettes?.first ?? .init()
+        if allPallettes?.isEmpty ?? true {
+            if allPallettes == nil {
+                assertionFailure("🛑 ERROR: Unable to fetch pallette from CoreData")
+            }
+            print("⚠️ NO EXISTING PALLETTE -- CREATING NEW ONE")
+            context.insert(firstPallette)
+            try? context.save()
+        }
+        self._pallette = firstPallette
+    }
+    
+    subscript<T>(dynamicMember keyPath: WritableKeyPath<_UserColorPallette, T>) -> T {
+        get {
+            _pallette[keyPath: keyPath]
+        }
+        set {
+            _pallette[keyPath: keyPath] = newValue
+            try? Self.context.save()
+        }
+    }
+}
+
+// MARK: @Model Object
+
+/// Do not reference this object direclty.
+/// Instead, reference `ColorPallette.current` instead.
 @Model
-final class ColorPallette {
+final class _UserColorPallette {
     var pallette: [ColorOption]
     
     init() {

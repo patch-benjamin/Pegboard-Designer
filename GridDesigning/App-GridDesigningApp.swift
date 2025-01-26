@@ -10,9 +10,10 @@ import SwiftData
 
 @main
 struct GridDesigningApp: App {
-    var sharedModelContainer: ModelContainer = {
+    static var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            Pegboard.self,
+            _UserColorPallette.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -22,11 +23,12 @@ struct GridDesigningApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+    static var context: ModelContext { sharedModelContainer.mainContext }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(Self.sharedModelContainer)
     }
 }
