@@ -64,8 +64,8 @@ final class _UserColorPallette {
 
 // MARK: - ColorOption
 
-struct ColorOption: Identifiable {
-    let id = UUID()
+struct ColorOption: Identifiable, Codable {
+    private(set) var id = UUID()
     var hex: String // `var` == allow changing color value
     var color: Color { Color(hex: hex) }
     
@@ -73,6 +73,7 @@ struct ColorOption: Identifiable {
         guard let hex = color.toHex() else {
             assertionFailure("Unable to initialize ColorOption from Color - unable to get hex")
             self.hex = "#000000"
+            return
         }
         self.hex = hex
     }

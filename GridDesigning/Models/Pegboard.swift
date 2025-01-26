@@ -23,15 +23,21 @@ final class Pegboard {
     }
     
     init(width: Int, height: Int, colors: [UUID]) {
-        for _ in 0..<height {
-            pegHoles.append(Array(repeating: .init(), count: width))
-        }
+        _pegHoles = []
         self.designPallette = colors
+        
+        for _ in 0..<height {
+            _pegHoles.append(Array(repeating: .init(), count: width))
+        }
     }
     
 }
 
-struct PegHole: Identifiable {
-    let id = UUID()
+struct PegHole: Identifiable, Codable {
+    private(set) var id = UUID()
     var pegColor: UUID?
+    
+    init(pegColor: UUID? = nil) {
+        self.pegColor = pegColor
+    }
 }
