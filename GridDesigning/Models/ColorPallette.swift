@@ -29,7 +29,7 @@ final class ColorPallette {
 
 struct ColorOption: Identifiable {
     let id = UUID()
-    var hex: String
+    var hex: String // `var` == allow changing color value
     var color: Color { Color(hex: hex) }
     
     init(color: Color) {
@@ -39,6 +39,5 @@ struct ColorOption: Identifiable {
         }
         self.hex = hex
     }
-    
 }
 
