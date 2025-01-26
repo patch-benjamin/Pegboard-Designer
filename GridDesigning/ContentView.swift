@@ -14,7 +14,8 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            PegboardDrawingView(columns: 16, rows: 16)
+            
+            //            PegboardDrawingView(columns: 16, rows: 16)
         }
     }
 }
