@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  RootView.swift
 //  GridDesigning
 //
 //  Created by Benjamin Patch on 1/19/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct ContentView: View {
+struct RootView: View {
     @Environment(\.modelContext) private var modelContext
 //    @Query private var items: [Item]
     
@@ -23,7 +23,7 @@ struct ContentView: View {
 
 
 #Preview {
-    ContentView()
+    RootView()
 //        .modelContainer(for: Item.self, inMemory: true)
 }
 

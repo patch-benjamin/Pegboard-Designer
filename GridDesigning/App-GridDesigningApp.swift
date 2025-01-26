@@ -27,7 +27,7 @@ struct GridDesigningApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
         .modelContainer(Self.sharedModelContainer)
     }

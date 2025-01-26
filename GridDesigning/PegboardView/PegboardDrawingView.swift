@@ -45,8 +45,9 @@ struct PegboardDrawingView: View {
     }
     
     @ViewBuilder
-    var pegboard: PegboardView {
-        PegboardView(columns: columns, rows: rows, currentColor: $currentColor, buttonColors: $buttonColors, colorPallette: $colorPallette)
+    var pegboard: some View {
+        Text("")
+//        (columns: columns, rows: rows, currentColor: $currentColor, buttonColors: $buttonColors, colorPallette: $colorPallette)
     }
     
     @ViewBuilder
@@ -96,7 +97,7 @@ struct PegboardDrawingView: View {
 }
 
 #Preview {
-    ContentView()
+    RootView()
 }
 
 //struct HorizontalColorPallet: View {

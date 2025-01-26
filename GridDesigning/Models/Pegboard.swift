@@ -10,24 +10,25 @@ import Foundation
 
 @Model
 final class Pegboard {
-    private var _pegHoles: [[PegHole]]
+    private var pegHoles: [[PegHole]]
     var designPallette: [UUID]
     
-    var pegHoles: [[PegHole]] {
+    var rows: [[PegHole]] {
         get {
-            _pegHoles
+            pegHoles
         } set {
-            guard newValue.flatMap({ $0 }).count == _pegHoles.flatMap({ $0 }).count else { return }
-            _pegHoles = newValue
+            guard newValue.flatMap({ $0 }).count == pegHoles.flatMap({ $0 }).count else { return }
+            pegHoles = newValue
         }
     }
     
+    
     init(width: Int, height: Int, colors: [UUID]) {
-        _pegHoles = []
+        pegHoles = []
         self.designPallette = colors
         
         for _ in 0..<height {
-            _pegHoles.append(Array(repeating: .init(), count: width))
+            pegHoles.append(Array(repeating: .init(), count: width))
         }
     }
     
@@ -35,9 +36,9 @@ final class Pegboard {
 
 struct PegHole: Identifiable, Codable {
     private(set) var id = UUID()
-    var pegColor: UUID?
+    var colorID: UUID?
     
     init(pegColor: UUID? = nil) {
-        self.pegColor = pegColor
+        self.colorID = pegColor
     }
 }

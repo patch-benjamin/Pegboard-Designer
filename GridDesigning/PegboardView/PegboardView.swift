@@ -8,31 +8,33 @@
 import SwiftUI
 
 struct PegboardView: View {
-    let columns: [Int]
-    let rows: [Int]
-
+    let pegboard: Pegboard
     @Binding var currentColor: Color
-    // [Column: [Row: COLOR]]
-    @Binding var buttonColors: [Int: [Int: Color]]
-    @Binding var colorPallette: [Color]
+    let pallette: [ColorOption]
+    let rowIndexes: [Int] // [0,1,2,3,etc]
+    let pegIndexes: [Int] // [0,1,2,3,etc]
 
-    init(columns: Int, rows: Int, currentColor: Binding<Color>, buttonColors: Binding<[Int: [Int: Color]]>, colorPallette: Binding<[Color]>) {
-        self.columns = Array<Int>(0..<columns)
-        self.rows = Array<Int>(0..<rows)
+    init(pegboard: Pegboard, currentColor: Binding<Color>, pallette: [ColorOption]) {
+        self.pegboard = pegboard
         self._currentColor = currentColor
-        self._buttonColors = buttonColors
-        self._colorPallette = colorPallette
+        self.pallette = pallette
+        rowIndexes = .init(0..<pegboard.rows.count)
+        if let rowCount = pegboard.rows.first?.count {
+            pegIndexes = .init(0..<rowCount)
+        } else {
+            pegIndexes = []
+        }
     }
  
     var body: some View {
         Grid(horizontalSpacing: Self.barWidth, verticalSpacing: Self.barWidth) {
             topRow
-            ForEach(rows, id: \.self) { row in
+            ForEach(rowIndexes, id: \.self) { rowIndex in
                 GridRow {
-                    Text(Self.alphabet[row])
-                    ForEach(columns, id: \.self) { column in
+                    Text(Self.alphabet[rowIndex])
+                    ForEach(pegIndexes, id: \.self) { pegIndex in
                         VStack(spacing: Self.barWidth) {
-                            coloredButton(column: column, row: row)
+                            coloredButton(rowIndex: rowIndex, pegIndex: pegIndex)
                         }
                     }
                 }
@@ -44,38 +46,45 @@ struct PegboardView: View {
     }
     
     @ViewBuilder
-    func coloredButton(column: Int, row: Int) -> some View {
-        (buttonColors[column]?[row] ?? .white)
+    func coloredButton(rowIndex: Int, pegIndex: Int) -> some View {
+        let pegHole = pegboard.rows[rowIndex][pegIndex]
+        color(for: pegHole)
             .frame(width: Self.buttonSize, height: Self.buttonSize)
             .onTapGesture {
-                setColor(column: column, row: row)
+                setColor(rowIndex: rowIndex, pegIndex: pegIndex)
             }
-            .onLongPressGesture {
-                currentColor = buttonColors[column]?[row] ?? .white
-            }
+    }
+    
+    @ViewBuilder
+    func color(for pegHole: PegHole) -> some View {
+        if let colorOption = pallette.first(where: { $0.id == pegHole.colorID }) {
+            colorOption.color
+        } else {
+            Image(systemName: "questionmark")
+        }
     }
     
     @ViewBuilder
     var topRow: some View {
         GridRow {
             Spacer()
-            ForEach(columns, id: \.self) { column in
+            ForEach(pegIndexes, id: \.self) { column in
                 Text("\(column)")
             }
         }
     }
     
-    func setColor(column: Int, row: Int) {
-        let newColor: Color?
-        if let color = buttonColors[column]?[row], color == currentColor {
-            newColor = nil
+    func setColor(rowIndex: Int, pegIndex: Int) {
+        let newColorID: UUID?
+        let pegHole = pegboard.rows[rowIndex][pegIndex]
+        let currentColorOption = pallette.first(where: { $0.hex == currentColor.toHex() })
+        
+        if pegHole.colorID == currentColorOption?.id {
+            newColorID = nil
         } else {
-            newColor = currentColor
-            if !colorPallette.contains(currentColor) {
-                colorPallette.insert(currentColor, at: 0)
-            }
+            newColorID = currentColorOption?.id
         }
-        buttonColors[column, default: [:]][row] = newColor
+        pegboard.rows[rowIndex][pegIndex].colorID = newColorID
     }
 
 }
