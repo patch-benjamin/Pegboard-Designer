@@ -11,7 +11,7 @@ import Foundation
 @Model
 final class Pegboard {
     private var pegHoles: [[PegHole]]
-    var designPallette: [UUID]
+    private(set) var designPallette: [UUID]
     
     var rows: [[PegHole]] {
         get {
@@ -29,6 +29,16 @@ final class Pegboard {
         
         for _ in 0..<height {
             pegHoles.append(Array(repeating: .init(), count: width))
+        }
+    }
+    
+    func addColorIDsToPallette(_ colorIDs: [UUID]) {
+        var setIDs = Set(designPallette)
+        for id in colorIDs {
+            if !setIDs.contains(id) {
+                setIDs.insert(id)
+                self.designPallette.append(id)
+            }
         }
     }
     

@@ -10,12 +10,23 @@ import SwiftData
 
 struct RootView: View {
     @Environment(\.modelContext) private var modelContext
-//    @Query private var items: [Item]
+    @State var presentModal = false
     
     var body: some View {
         NavigationStack {
-            
-            //            PegboardDrawingView(columns: 16, rows: 16)
+            ProjectListView()
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: {
+                            let newPegboard = Pegboard.init(width: 16, height: 16, colors: [])
+                            modelContext.insert(newPegboard)
+                            try? modelContext.save()
+                            // Will trigger a UI update on ProjectListView.
+                        }) {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
         }
     }
 }

@@ -10,12 +10,18 @@ import SwiftData
 
 struct ProjectListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var projects: [Pegboard]
+    @Query private var pegboards: [Pegboard]
+    
     var body: some View {
-        List(projects) { project in
-            
+        List(pegboards) { pegboard in
+            NavigationLink {
+                PegboardDrawingView(pegboard: pegboard)
+            } label: {
+                PegboardView(pegboard: pegboard, currentColor: .constant(.white), pallette: UserPallette.current.pallette, isThumbnail: true)
+                    .fixedSize()
+                    .clipped()
+            }
         }
-        Text("t")
     }
 }
 

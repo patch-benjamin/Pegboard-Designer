@@ -8,9 +8,10 @@
 import SwiftData
 import SwiftUI
 
+@Observable
 @dynamicMemberLookup
-struct ColorPallette {
-    static var current: Self = .init()
+class UserPallette {
+    static var current: UserPallette = UserPallette()
     static var context: ModelContext { GridDesigningApp.context }
 
     private var _pallette: _UserColorPallette
@@ -28,6 +29,10 @@ struct ColorPallette {
             try? context.save()
         }
         self._pallette = firstPallette
+    }
+    
+    func color(for id: UUID) -> Color? {
+        _pallette.pallette.first(where: { $0.id == id })?.color
     }
     
     subscript<T>(dynamicMember keyPath: WritableKeyPath<_UserColorPallette, T>) -> T {
