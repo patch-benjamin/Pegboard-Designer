@@ -52,8 +52,8 @@ struct UserColorPalletteView: View {
                             userPallette.pallette.remove(at: index)
                         }
                     }
-                    Button {
-                        presentColorPicker = true
+                    ColorPickerButton { newColor in
+                        userPallette.pallette.append(.init(color: newColor))
                     } label: {
                         HStack {
                             Text("Add Color to User Pallette")
@@ -62,27 +62,9 @@ struct UserColorPalletteView: View {
                         }
                     }
                 }
-                .sheet(isPresented: $presentColorPicker) {
-                    ColorPickerWrapper { newColor in
-                        userPallette.pallette.append(.init(color: newColor))
-                    }
+                if false && userPallette.pallette.count > 5 {
+                    deletAllButton
                 }
-//                if userPallette.pallette.count > 5 {
-//                    Section {
-//                        Button {
-//                            userPallette.pallette.removeAll()
-//                        } label: {
-//                            HStack {
-//                                Text("Delete ALL Colors")
-//                                Image(systemName: "trash")
-//                                Spacer()
-//                            }
-//                        }
-//                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-//                    }
-//                    .listRowBackground(Color.red)
-//                    .foregroundStyle(Color.white)
-//                }
             }
         }
     }
@@ -100,6 +82,23 @@ struct UserColorPalletteView: View {
             .labelsHidden()
             .scaleEffect(CGSize(width: 3, height: 3))
             .padding(30)
+    }
+    
+    @ViewBuilder var deletAllButton: some View {
+        Section {
+            Button {
+                userPallette.pallette.removeAll()
+            } label: {
+                HStack {
+                    Text("Delete ALL Colors")
+                    Image(systemName: "trash")
+                    Spacer()
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .listRowBackground(Color.red)
+        .foregroundStyle(Color.white)
     }
 }
 
