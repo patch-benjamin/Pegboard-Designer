@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PegboardDrawingView: View {
-    @State var currentColor: Color = .black
+    @State var currentColorID: UUID?
     @State var sharableSnapshot: UIImage?
     let pegboard: Pegboard
 
@@ -18,7 +18,7 @@ struct PegboardDrawingView: View {
                 pegboardView
             }
             ScrollView(.horizontal) {
-                HorizontalColorPicker(pegboard: pegboard, currentColor: $currentColor)
+                HorizontalColorPicker(pegboard: pegboard, currentColorID: $currentColorID)
             }
         }
         .background(Color.black)
@@ -40,7 +40,7 @@ struct PegboardDrawingView: View {
     
     @ViewBuilder
     var pegboardView: some View {
-        PegboardView(pegboard: pegboard, currentColor: $currentColor, pallette: UserPallette.current.pallette)
+        PegboardView(pegboard: pegboard, currentColorID: $currentColorID, pallette: UserPallette.current.pallette)
     }
     
     

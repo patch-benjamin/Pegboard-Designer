@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PegboardView: View {
     let pegboard: Pegboard
-    @Binding var currentColor: Color
+    @Binding var currentColorID: UUID?
     let pallette: [ColorOption]
     let rowIndexes: [Int] // [0,1,2,3,etc]
     let pegIndexes: [Int] // [0,1,2,3,etc]
@@ -17,9 +17,9 @@ struct PegboardView: View {
     let buttonSize: CGFloat
     let barWidth: CGFloat
 
-    init(pegboard: Pegboard, currentColor: Binding<Color>, pallette: [ColorOption], isThumbnail: Bool = false) {
+    init(pegboard: Pegboard, currentColorID: Binding<UUID?>, pallette: [ColorOption], isThumbnail: Bool = false) {
         self.pegboard = pegboard
-        self._currentColor = currentColor
+        self._currentColorID = currentColorID
         self.pallette = pallette
         self.isThumbnail = isThumbnail
         self.buttonSize = isThumbnail ? 4 : 41.6
@@ -89,7 +89,7 @@ struct PegboardView: View {
     func setColor(rowIndex: Int, pegIndex: Int) {
         let newColorID: UUID?
         let pegHole = pegboard.rows[rowIndex][pegIndex]
-        let currentColorOption = pallette.first(where: { $0.hex == currentColor.toHex() })
+        let currentColorOption = pallette.first(where: { $0.id == currentColorID })
         
         if pegHole.colorID == currentColorOption?.id {
             newColorID = nil

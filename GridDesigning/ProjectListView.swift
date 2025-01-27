@@ -17,7 +17,7 @@ struct ProjectListView: View {
             NavigationLink {
                 PegboardDrawingView(pegboard: pegboard)
             } label: {
-                PegboardView(pegboard: pegboard, currentColor: .constant(.white), pallette: UserPallette.current.pallette, isThumbnail: true)
+                PegboardView(pegboard: pegboard, currentColorID: .constant(nil), pallette: UserPallette.current.pallette, isThumbnail: true)
                     .fixedSize()
                     .clipped()
             }

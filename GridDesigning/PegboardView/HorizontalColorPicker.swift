@@ -11,14 +11,14 @@ struct HorizontalColorPicker: View {
     private let userPallette = UserPallette.current
     var pegboard: Pegboard
     var pegboardPalletteColorIDs: [UUID] { pegboard.designPallette }
-    @Binding var currentColor: Color
+    @Binding var currentColorID: UUID?
     
     var body: some View {
         HStack {
             ForEach(pegboardPalletteColorIDs, id: \.self) { colorID in
                 if let color = userPallette.color(for: colorID) {
                     color.circularButtonStyle(onTap: {
-                        currentColor = color
+                        currentColorID = colorID
                     })
                 } else {
                     invalidColorButton
