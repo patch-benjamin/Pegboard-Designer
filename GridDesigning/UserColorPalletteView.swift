@@ -16,9 +16,13 @@ struct UserColorPalletteView: View {
         VStack {
             ScrollView(.horizontal) {
                 HStack {
-                    ForEach(selectedColors, id: \.self) { colorID in
-                        userPallette.color(for: colorID)?
-                            .circularButtonStyle(diameter: 40)
+                    if selectedColors.isEmpty {
+                        Text("No Colors Added Yet")
+                    } else {
+                        ForEach(selectedColors, id: \.self) { colorID in
+                            userPallette.color(for: colorID)?
+                                .circularButtonStyle(diameter: 40)
+                        }
                     }
                 }
                 .padding(.horizontal)
@@ -63,22 +67,22 @@ struct UserColorPalletteView: View {
                         userPallette.pallette.append(.init(color: newColor))
                     }
                 }
-                if userPallette.pallette.count > 5 {
-                    Section {
-                        Button {
-                            userPallette.pallette.removeAll()
-                        } label: {
-                            HStack {
-                                Text("Delete ALL Colors")
-                                Image(systemName: "trash")
-                                Spacer()
-                            }
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
-                    .listRowBackground(Color.red)
-                    .foregroundStyle(Color.white)
-                }
+//                if userPallette.pallette.count > 5 {
+//                    Section {
+//                        Button {
+//                            userPallette.pallette.removeAll()
+//                        } label: {
+//                            HStack {
+//                                Text("Delete ALL Colors")
+//                                Image(systemName: "trash")
+//                                Spacer()
+//                            }
+//                        }
+//                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                    }
+//                    .listRowBackground(Color.red)
+//                    .foregroundStyle(Color.white)
+//                }
             }
         }
     }

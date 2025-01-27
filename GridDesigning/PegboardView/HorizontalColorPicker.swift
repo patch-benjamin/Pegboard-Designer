@@ -8,18 +8,20 @@
 import SwiftUI
 
 struct HorizontalColorPicker: View {
+    @Environment(\.modelContext) private var modelContext
     private let userPallette = UserPallette.current
     var pegboard: Pegboard
-    var pegboardPalletteColorIDs: [UUID] { pegboard.designPallette }
     @Binding var currentColorID: UUID?
     
     var body: some View {
         HStack {
-            ForEach(pegboardPalletteColorIDs, id: \.self) { colorID in
+            ForEach(pegboard.designPallette, id: \.self) { colorID in
                 if let color = userPallette.color(for: colorID) {
-                    color.circularButtonStyle(onTap: {
-                        currentColorID = colorID
-                    })
+                    color
+                        .circularButtonStyle(onTap: {
+                            currentColorID = colorID
+                        })
+                        .border(currentColorID == colorID ? Color.white : .clear, width: 5)
                 } else {
                     invalidColorButton
                 }
@@ -45,10 +47,16 @@ struct HorizontalColorPicker: View {
                 pegboard.designPallette
             }, set: { newIDs in
                 pegboard.designPallette = newIDs
+                try? modelContext.save()
             }))
         } label: {
-            Image(systemName: "plus")
-                .circularButtonStyle()
+            ZStack {
+                Color.white
+                Image(systemName: "plus")
+                    .imageScale(.large)
+                    .foregroundStyle(Color.black)
+            }
+            .circularButtonStyle(diameter: 50)
         }
     }
 }
