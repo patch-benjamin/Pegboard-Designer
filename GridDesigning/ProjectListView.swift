@@ -18,9 +18,12 @@ struct ProjectListView: View {
                 NavigationLink {
                     PegboardDrawingView(pegboard: pegboard)
                 } label: {
-                    PegboardView(pegboard: pegboard, currentColorID: .constant(nil), pallette: UserPallette.current.pallette, size: .constant(.thumbnail))
-                        .fixedSize()
-                        .clipped()
+                    HStack(alignment: .top) {
+                        PegboardView(pegboard: pegboard, currentColorID: .constant(nil), pallette: UserPallette.current.pallette, size: .constant(.thumbnail))
+                            .fixedSize()
+                            .clipped()
+                        HorizontalColorPicker(pegboard: pegboard, currentColorID: .constant(nil), buttonDiameter: 16, hideAddButton: true)
+                    }
                 }
             }
             .onDelete { indexSet in

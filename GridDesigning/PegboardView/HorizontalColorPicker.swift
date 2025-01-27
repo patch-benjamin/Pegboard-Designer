@@ -12,13 +12,15 @@ struct HorizontalColorPicker: View {
     private let userPallette = UserPallette.current
     var pegboard: Pegboard
     @Binding var currentColorID: UUID?
+    var buttonDiameter: CGFloat = 80
+    var hideAddButton = false
     
     var body: some View {
         HStack {
             ForEach(pegboard.designPallette, id: \.self) { colorID in
                 if let color = userPallette.color(for: colorID) {
                     color
-                        .circularButtonStyle(onTap: {
+                        .circularButtonStyle(diameter: buttonDiameter, onTap: {
                             currentColorID = colorID
                         })
                         .border(currentColorID == colorID ? Color.white : .clear, width: 5)
@@ -26,7 +28,9 @@ struct HorizontalColorPicker: View {
                     invalidColorButton
                 }
             }
-            addColorsButton
+            if !hideAddButton {
+                addColorsButton
+            }
         }
     }
     
@@ -35,7 +39,7 @@ struct HorizontalColorPicker: View {
         Image(systemName: "questionmark")
             .foregroundStyle(Color.black)
             .background(Color.white)
-            .circularButtonStyle {
+            .circularButtonStyle(diameter: buttonDiameter) {
                 // present user color pallette
             }
     }
@@ -56,7 +60,7 @@ struct HorizontalColorPicker: View {
                     .imageScale(.large)
                     .foregroundStyle(Color.black)
             }
-            .circularButtonStyle(diameter: 50)
+            .circularButtonStyle(diameter: buttonDiameter * 0.6)
         }
     }
 }
