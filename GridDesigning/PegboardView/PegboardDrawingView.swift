@@ -11,11 +11,12 @@ struct PegboardDrawingView: View {
     @State var currentColorID: UUID?
     @State var sharableSnapshot: UIImage?
     let pegboard: Pegboard
-
+    @State var pegboardSizing = PegboardViewSize()
+    
     var body: some View {
         VStack {
             AllScrollView {
-                pegboardView
+                PegboardView(pegboard: pegboard, currentColorID: $currentColorID, pallette: UserPallette.current.pallette, size: $pegboardSizing)
             }
             ScrollView(.horizontal) {
                 HorizontalColorPicker(pegboard: pegboard, currentColorID: $currentColorID)
@@ -30,17 +31,17 @@ struct PegboardDrawingView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    sharableSnapshot = ImageRenderer(content: pegboardView).uiImage
+                    sharableSnapshot = ImageRenderer(content: printableView).uiImage
                 } label: {
                     Image(systemName: "camera")
                 }
             }
         }
     }
-    
+        
     @ViewBuilder
-    var pegboardView: some View {
-        PegboardView(pegboard: pegboard, currentColorID: $currentColorID, pallette: UserPallette.current.pallette)
+    var printableView: some View {
+        PegboardPrintableView(pegboard: pegboard, size: .printing)
     }
     
     

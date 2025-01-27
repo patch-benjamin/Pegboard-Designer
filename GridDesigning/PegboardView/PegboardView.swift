@@ -7,23 +7,48 @@
 
 import SwiftUI
 
+@Observable class PegboardViewSize {
+    var pegSize: CGFloat
+    var dividerWidth: CGFloat
+    var borderWidth: CGFloat
+    var isThumbnail: Bool
+    
+    static var thumbnail: PegboardViewSize {
+        .init(pegSize: 4, dividerWidth: 1, borderWidth: 2, isThumbnail: true)
+    }
+    
+    static var printing: PegboardViewSize {
+        .init(borderWidth: 16)
+    }
+    
+    convenience init(pegSize: CGFloat = 41.6, dividerWidth: CGFloat = 8, borderWidth: CGFloat = 0) {
+        self.init(pegSize: pegSize, dividerWidth: dividerWidth, borderWidth: borderWidth, isThumbnail: false)
+    }
+    
+    private init(pegSize: CGFloat, dividerWidth: CGFloat, borderWidth: CGFloat, isThumbnail: Bool) {
+        self.pegSize = pegSize
+        self.dividerWidth = dividerWidth
+        self.borderWidth = borderWidth
+        self.isThumbnail = isThumbnail
+    }
+}
+
 struct PegboardView: View {
     let pegboard: Pegboard
     @Binding var currentColorID: UUID?
     let pallette: [ColorOption]
     let rowIndexes: [Int] // [0,1,2,3,etc]
     let pegIndexes: [Int] // [0,1,2,3,etc]
-    let isThumbnail: Bool
-    let buttonSize: CGFloat
-    let barWidth: CGFloat
+    @Binding var size: PegboardViewSize
+    var buttonSize: CGFloat { size.pegSize }
+    var barWidth: CGFloat { size.dividerWidth }
+    var isThumbnail: Bool { size.isThumbnail }
 
-    init(pegboard: Pegboard, currentColorID: Binding<UUID?>, pallette: [ColorOption], isThumbnail: Bool = false) {
+    init(pegboard: Pegboard, currentColorID: Binding<UUID?>, pallette: [ColorOption], size: Binding<PegboardViewSize>) {
         self.pegboard = pegboard
         self._currentColorID = currentColorID
         self.pallette = pallette
-        self.isThumbnail = isThumbnail
-        self.buttonSize = isThumbnail ? 4 : 41.6
-        self.barWidth = isThumbnail ? 1 : 8
+        self._size = size
         rowIndexes = .init(0..<pegboard.rows.count)
         if let rowCount = pegboard.rows.first?.count {
             pegIndexes = .init(0..<rowCount)
@@ -50,7 +75,7 @@ struct PegboardView: View {
                 }
             }
         }
-        .padding(isThumbnail ? 2 : 0)
+        .padding(size.borderWidth)
         .padding(.bottom, isThumbnail ? 0 : 8)
         .scrollIndicators(.visible)
         .foregroundStyle(Color.white)
