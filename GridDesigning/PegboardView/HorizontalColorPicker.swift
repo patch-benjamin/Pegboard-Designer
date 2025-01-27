@@ -44,7 +44,7 @@ struct HorizontalColorPicker: View {
             UserColorPalletteView(selectedColors: .init(get: {
                 pegboard.designPallette
             }, set: { newIDs in
-                pegboard.addColorIDsToPallette(newIDs)
+                pegboard.designPallette = newIDs
             }))
         } label: {
             Image(systemName: "plus")

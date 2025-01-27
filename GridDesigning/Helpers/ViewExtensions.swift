@@ -8,19 +8,17 @@
 import SwiftUI
 
 extension View {
-    static var circularButtonSize: CGFloat { 80 }
-
-    func circularButtonStyle(onTap: @escaping () -> Void) -> some View {
+    func circularButtonStyle(diameter: CGFloat = 80, onTap: @escaping () -> Void) -> some View {
         self
-        .frame(width: Self.circularButtonSize, height: Self.circularButtonSize)
-        .cornerRadius(Self.circularButtonSize / 2)
+        .frame(width: diameter, height: diameter)
+        .cornerRadius(diameter / 2)
         .onTapGesture(perform: onTap)
 
     }
     
-    func circularButtonStyle() -> some View {
+    func circularButtonStyle(diameter: CGFloat = 80) -> some View {
         self
-        .frame(width: Self.circularButtonSize, height: Self.circularButtonSize)
-        .cornerRadius(Self.circularButtonSize / 2)
+        .frame(width: diameter, height: diameter)
+        .cornerRadius(diameter / 2)
     }
 }

@@ -65,6 +65,10 @@ final class _UserColorPallette {
     func addColor(_ color: Color) {
         pallette.append(.init(color: color))
     }
+    
+    func color(for id: UUID) -> Color? {
+        pallette.first(where: { $0.id == id })?.color
+    }
 }
 
 // MARK: - ColorOption
