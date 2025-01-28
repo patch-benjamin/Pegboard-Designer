@@ -36,6 +36,10 @@ struct UserColorPalletteView: View {
                                 selectedColors.removeAll(where: { $0 == colorOption.id })
                             } else {
                                 selectedColors.append(colorOption.id)
+                                selectedColors = selectedColors.sorted(by: { id1, id2 in
+                                    guard let hex1 = userPallette.color(for: id1)?.toHex(),  let hex2 = userPallette.color(for: id2)?.toHex() else { return false }
+                                    return hex1 > hex2
+                                })
                             }
                         } label: {
                             HStack {
@@ -53,20 +57,35 @@ struct UserColorPalletteView: View {
                         }
                     }
                     ColorPickerButton { newColor in
-                        userPallette.pallette.append(.init(color: newColor))
+                        addColor(newColor)
                     } label: {
                         HStack {
-                            Text("Add Color to User Pallette")
+                            Text("Add Single Color to App's Color Pallette")
+                            Image(systemName: "plus")
+                            Spacer()
+                        }
+                    }
+                    ColorPickerButton(dismissOnSelection: false) { newColor in
+                        addColor(newColor)
+                    } label: {
+                        HStack {
+                            Text("Endlessly Add Colors to App's Color Pallette")
+                            Image(systemName: "plus")
                             Image(systemName: "plus")
                             Spacer()
                         }
                     }
                 }
-                if false && userPallette.pallette.count > 5 {
+                if userPallette.pallette.count > 5 {
                     deletAllButton
                 }
             }
         }
+    }
+    
+    func addColor(_ newColor: Color) {
+        guard userPallette.pallette.contains(where: { $0.hex == newColor.toHex() }) == false else { return }
+        userPallette.pallette.insert(.init(color: newColor), at: 0)
     }
     
     @ViewBuilder

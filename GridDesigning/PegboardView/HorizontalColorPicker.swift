@@ -23,7 +23,11 @@ struct HorizontalColorPicker: View {
                         .circularButtonStyle(diameter: buttonDiameter, onTap: {
                             currentColorID = colorID
                         })
-                        .border(currentColorID == colorID ? Color.white : .clear, width: 5)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: buttonDiameter)
+                                .stroke(currentColorID == colorID ? Color.white : .clear, lineWidth: 5)
+                        )
+                        .padding(5)
                 } else {
                     invalidColorButton
                 }
